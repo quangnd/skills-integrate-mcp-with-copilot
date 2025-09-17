@@ -89,15 +89,28 @@ section h3 {
 
 .participants-section ul {
   list-style-type: none;
-  padding-left: 5px;
+  padding-left: 0;
+  margin: 0;
+  border-radius: 8px;
+  background: #f3f6fa;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  /* border removed for cleaner look */
 }
 
 .participants-section ul li {
-  padding: 4px 0;
-  position: relative;
+  padding: 10px 16px;
+  margin: 6px 0;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #e3f2fd 0%, #f8bbd0 100%);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  transition: box-shadow 0.2s;
+}
+
+.participants-section ul li:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 /* Remove the bullet point pseudo-element */
@@ -105,11 +118,15 @@ section h3 {
   display: none;
 }
 
-.participant-email {
-  flex-grow: 1;
-  margin-right: 8px;
-}
-
+  .participant-email {
+    flex-grow: 1;
+    font-weight: 500;
+    color: #3949ab;
+    font-size: 15px;
+    letter-spacing: 0.2px;
+    padding-right: 10px;
+    word-break: break-all;
+  }
 .delete-btn {
   background: none;
   border: none;
@@ -197,4 +214,5 @@ footer {
   margin-top: 30px;
   padding: 20px;
   color: #666;
+}
 }
