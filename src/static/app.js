@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
   const activitiesList = document.getElementById("activities-list");
-  const activitySelect = document.getElementById("activity");
-  const signupForm = document.getElementById("signup-form");
   const messageDiv = document.getElementById("message");
 
   // Function to fetch activities from API
@@ -45,15 +43,43 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="participants-container">
             ${participantsHTML}
           </div>
+          <form class="register-form">
+            <input type="email" class="register-email" required placeholder="your-email@mergington.edu" />
+            <button type="submit">Register Student</button>
+          </form>
         `;
+
+        // Register form event
+        const registerForm = activityCard.querySelector(".register-form");
+        registerForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const emailInput = registerForm.querySelector(".register-email");
+          const email = emailInput.value.trim();
+          if (!email) return;
+          try {
+            const response = await fetch(`/activities/${encodeURIComponent(name)}/signup?email=${encodeURIComponent(email)}`, {
+              method: "POST"
+            });
+            const result = await response.json();
+            const messageDiv = document.getElementById("message");
+            if (response.ok) {
+              messageDiv.textContent = `Registered ${email} for ${name}!`;
+              messageDiv.classList.remove("hidden");
+              fetchActivities();
+            } else {
+              messageDiv.textContent = result.detail || "Registration failed.";
+              messageDiv.classList.remove("hidden");
+            }
+          } catch (err) {
+            const messageDiv = document.getElementById("message");
+            messageDiv.textContent = "Error registering student.";
+            messageDiv.classList.remove("hidden");
+          }
+        });
 
         activitiesList.appendChild(activityCard);
 
-        // Add option to select dropdown
-        const option = document.createElement("option");
-        option.value = name;
-        option.textContent = name;
-        activitySelect.appendChild(option);
+    // ...existing code...
       });
 
       // Add event listeners to delete buttons
@@ -110,50 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Handle form submission
-  signupForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const email = document.getElementById("email").value;
-    const activity = document.getElementById("activity").value;
-
-    try {
-      const response = await fetch(
-        `/activities/${encodeURIComponent(
-          activity
-        )}/signup?email=${encodeURIComponent(email)}`,
-        {
-          method: "POST",
-        }
-      );
-
-      const result = await response.json();
-
-      if (response.ok) {
-        messageDiv.textContent = result.message;
-        messageDiv.className = "success";
-        signupForm.reset();
-
-        // Refresh activities list to show updated participants
-        fetchActivities();
-      } else {
-        messageDiv.textContent = result.detail || "An error occurred";
-        messageDiv.className = "error";
-      }
-
-      messageDiv.classList.remove("hidden");
-
-      // Hide message after 5 seconds
-      setTimeout(() => {
-        messageDiv.classList.add("hidden");
-      }, 5000);
-    } catch (error) {
-      messageDiv.textContent = "Failed to sign up. Please try again.";
-      messageDiv.className = "error";
-      messageDiv.classList.remove("hidden");
-      console.error("Error signing up:", error);
-    }
-  });
+  // ...removed global signup form handler...
 
   // Initialize app
   fetchActivities();
